@@ -1,32 +1,33 @@
-// by Alexander Nikolskiy
-
 const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
+  output: process.stdout,
   terminal: false
 });
 
-process.stdin.setEncoding('utf8');
-
-const input = [];
+let input = '';
 rl.on('line', line => {
-  input.push(line.trim());
-  const n = parseInt(input[0], 10);
-  console.log(collectingSignature(n, segments));
-  process.exit();
+  input += line.trim();
 });
 
-function collectingSignature(n, segments) {
-  segments.sort((a, b) => a[1] - b[1]);
-  const points = [];
-  let i = 0;
-  while (i < n) {
-    const point = segments[i][1]; // right endpoint of the segment
-    points.push(point);
-    i++;
-    while (i < n && segments[i][0] <= point) i++;
+rl.on('close', () => {
+  const n = parseInt(input, 10);
+  const prizes = maxNumOfPrize(n);
+  console.log(prizes.length);
+  console.log(prizes.join(' '));
+});
+
+function maxNumOfPrize(n) {
+  let remaining = n;
+  const prizes = [];
+  let next = 1;
+  while (remaining - next > next) {
+    prizes.push(next);
+    remaining -= next;
+    next++;
   }
-  return points;
+  prizes.push(remaining);
+  return prizes;
 }
 
-module.exports = collectingSignature;
+module.exports = maxNumOfPrize;
